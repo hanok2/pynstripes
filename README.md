@@ -1,2 +1,3 @@
 # pynstripes
-Various game and tool prototypes and mock-ups (for now...)
+
+Just the mars_rogue.py game, for now.
