@@ -1,4 +1,7 @@
 import sys
+from typing import Iterable
+
+from entity import Entity
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
 
@@ -10,12 +13,12 @@ from globals import *
 
 
 class GameMap:
-    def __init__(self, width: int, height: int):
+    def __init__(self, width: int, height: int, entities: Iterable[Entity] = ()):
         self.width, self.height = width, height
-
+        self.entities = set(entities)
         self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
-        self.visible = np.full((width, height), fill_value=False, order="F")  # Tiles the player can currently see
+        self.visible = np.full((width, height), fill_value=False, order="F")  # Tiles the player can now see
         self.explored = np.full((width, height), fill_value=False, order="F")  # Tiles the player has seen before
         
     def in_bounds(self, x: int, y: int) -> bool:
@@ -38,6 +41,12 @@ class GameMap:
             default=tile_types.SHROUD
         )
 
+        for entity in self.entities:
+            # Only print entities that are in the FOV
+            if self.visible[entity.x, entity.y]:
+                console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
+
+        ##
 
 
 ##

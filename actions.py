@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Action:
     def perform(self, engine: Engine, entity: Entity) -> None:
-        """Perform this action with the objects needed to determine its scope.
+        """Do this action with the objects needed to decide its scope.
 
         `engine` is the scope this action is being performed in.
 

@@ -28,10 +28,10 @@ def main() -> None:
     event_handler = EventHandler()
 
     player = Entity(x=int(screen_width/2), y=int(screen_height/2), char="@", color=(255,255,255))
-    npc = Entity(x=int(screen_width/2 - 5), y=int(screen_height/2), char="@", color=(255,255,0))
-    entities = {npc, player}
+    # npc = Entity(x=int(screen_width/2 - 5), y=int(screen_height/2), char="@", color=(255,255,0))
+    # entities = {npc, player}
 
-    #game_map = GameMap(map_width, map_height)
+    # game_map = GameMap(map_width, map_height)
     game_map = generate_dungeon(
         max_rooms=globals.max_rooms,
         room_min_size=globals.room_min_size,
@@ -41,7 +41,7 @@ def main() -> None:
         player=player
     )
 
-    engine = Engine(entities=entities, event_handler=event_handler, game_map=game_map, player=player)
+    engine = Engine(event_handler=event_handler, game_map=game_map, player=player)
 
     with tcod.context.new_terminal(
         screen_width, screen_height, 
