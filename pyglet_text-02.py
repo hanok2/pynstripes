@@ -4,7 +4,14 @@ sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
 
 import pyglet
+from pyglet.graphics import Batch
 from pyglet.window import key, mouse
+
+from pyglet_gui_master import pyglet_gui
+from pyglet_gui_master.pyglet_gui.theme import Theme
+from pyglet_gui_master.pyglet_gui.gui import Label
+from pyglet_gui_master.pyglet_gui.manager import Manager
+
 
 class Globals:
     def __init__(self) -> None:
@@ -23,9 +30,42 @@ class Globals:
                                        anchor_x='center', anchor_y='center')
         self.music = pyglet.resource.media(self.song)
 
+        self.label_theme = Theme({"font": "Lucida Grande", "font_size": 12, "text_color": [255, 0, 0, 255]}, resources_path='')
 
+        self.expression = ""
+        self.equation = ""
+        self.memory = ""
+        self.computed = 0.0
+        self.total = 0
+
+        self.label = Label(self.label_text)
+        self.batch = Batch()
+
+global g 
 g = Globals()
 
+
+def press(num):
+    global g
+    g.expression = g.expression + str(num)
+    print(g.expression)
+    g.equation.set(expression)
+ 
+def equalpress():
+    global g
+    try:
+        g.total = str(eval(g.expression))
+        g.equation.set(g.total)
+        g.expression = ""
+    except:
+        print("ERROR:\n=========\n" + g.expression)
+        g.equation.set(" error ")
+        g.expression = ""
+  	    
+def clear():
+    g.expression = ""
+    g.equation.set("")
+ 
 
 @g.window.event
 def on_key_press(symbol, modifiers):
@@ -51,6 +91,7 @@ def on_mouse_press(x, y, button, modifiers):
 @g.window.event
 def on_draw():
     g.window.clear()
+    g.batch.draw()
     g.bkgd.blit(0,0)
     g.label.draw()
 
@@ -89,6 +130,9 @@ def on_resize(width, height):
 
 # event_logger = pyglet.window.event.WindowEventLogger()
 # window.push_handlers(event_logger)
+mgr = Manager(g.label, window=g.window, theme=g.label_theme, batch=g.batch)
+
+pyglet.app.run()
 
 print(g.title)
 pyglet.app.run()
