@@ -7,10 +7,10 @@ import pyglet
 from pyglet.graphics import Batch
 from pyglet.window import key, mouse
 
-from pyglet_gui_master import pyglet_gui
-from pyglet_gui_master.pyglet_gui.theme import Theme
-from pyglet_gui_master.pyglet_gui.gui import Label
-from pyglet_gui_master.pyglet_gui.manager import Manager
+import pyglet_gui
+from pyglet_gui.theme import Theme
+from pyglet_gui.gui import Label
+from pyglet_gui.manager import Manager
 
 
 class Globals:
@@ -49,7 +49,7 @@ def press(num):
     global g
     g.expression = g.expression + str(num)
     print(g.expression)
-    g.equation.set(expression)
+    g.equation.set(g.expression)
  
 def equalpress():
     global g
