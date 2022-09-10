@@ -1,19 +1,17 @@
 from __future__ import annotations
-
 import sys
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
-
 import random
 from typing import Iterator, Tuple, List, TYPE_CHECKING
 
 import tcod
 
+import entity_factories
 from game_map import GameMap
 
 if TYPE_CHECKING:
-    from entity import * # including globals object
-else:
+    from engine import Engine
     from globals import globals
 
 import tile_types
@@ -50,6 +48,21 @@ class RectangularRoom:
 
 ##
 
+def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: int) -> None:
+    number_of_monsters = random.randint(0, maximum_monsters)
+
+    for i in range(number_of_monsters):
+        x = random.randint(room.x1 + 1, room.x2 - 1)
+        y = random.randint(room.y1 + 1, room.y2 - 1)
+
+        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+            if random.random() < 0.8:
+                entity_factories.warrior.spawn(dungeon, x, y)
+            else:
+                entity_factories.drone.spawn(dungeon, x, y)
+
+##
+
 def tunnel_between( start: Tuple[int, int], end: Tuple[int, int] ) -> Iterator[Tuple[int, int]]:
     """Return an L-shaped tunnel between these two points."""
     x1, y1 = start
@@ -76,25 +89,13 @@ def generate_dungeon(
     room_max_size: int,
     map_width: int,
     map_height: int,
-    player: Entity,
+    max_monsters_per_room: int,
+    engine: Engine,
 ) -> GameMap:
     """Generate a new dungeon map.
-    
-def generate_dungeon(map_width, map_height) -> GameMap:
-    dungeon = GameMap(map_width, map_height)
-
-    room_1 = RectangularRoom(x=20, y=15, width=10, height=15)
-    room_2 = RectangularRoom(x=35, y=15, width=10, height=15)
-
-    dungeon.tiles[room_1.inner] = tile_types.floor
-    dungeon.tiles[room_2.inner] = tile_types.floor
-
-    for x, y in tunnel_between(room_2.center, room_1.center):
-        dungeon.tiles[x,y] = tile_types.floor
-
-    return dungeon
     """
-    dungeon = GameMap(map_width, map_height, entities=[player])
+    player = engine.player
+    dungeon = GameMap(engine, map_width, map_height, entities=[player])
 
     rooms: List[RectangularRoom] = []
 
@@ -118,11 +119,13 @@ def generate_dungeon(map_width, map_height) -> GameMap:
 
         if len(rooms) == 0:
             # The first room, where the player starts.
-            player.x, player.y = new_room.center
+            player.place(*new_room.center, dungeon)
         else:  # All rooms after the first.
             # Dig out a tunnel between this room and the earlier one.
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
+
+        place_entities(new_room, dungeon, max_monsters_per_room)
 
         # Finally, append the new room to the list.
         rooms.append(new_room)

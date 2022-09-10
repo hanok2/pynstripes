@@ -2,13 +2,14 @@
 import sys
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
+import copy
+
 import tcod
 ## pip install -r requirements.txt
 
 from engine import Engine
-from entity import * # including globals object
-#from actions import EscapeAction, MovementAction
-#from game_map import GameMap
+from globals import globals # including globals object
+import entity_factories
 from input_handler import EventHandler
 from procgen import generate_dungeon
 
@@ -25,23 +26,21 @@ def main() -> None:
         "16x16_ascii-charset.png", 16, 16, tcod.tileset.CHARMAP_CP437
     )
 
-    event_handler = EventHandler()
+    player = copy.deepcopy(entity_factories.player)
 
-    player = Entity(x=int(screen_width/2), y=int(screen_height/2), char="@", color=(255,255,255))
-    # npc = Entity(x=int(screen_width/2 - 5), y=int(screen_height/2), char="@", color=(255,255,0))
-    # entities = {npc, player}
+    engine = Engine(player=player)
 
     # game_map = GameMap(map_width, map_height)
-    game_map = generate_dungeon(
+    engine.game_map = generate_dungeon(
         max_rooms=globals.max_rooms,
         room_min_size=globals.room_min_size,
         room_max_size=globals.room_max_size,
         map_width=map_width,
         map_height=map_height,
-        player=player
+        max_monsters_per_room=globals.max_monsters_per_room,
+        engine=engine
     )
-
-    engine = Engine(event_handler=event_handler, game_map=game_map, player=player)
+    engine.update_fov()
 
     with tcod.context.new_terminal(
         screen_width, screen_height, 
@@ -52,10 +51,7 @@ def main() -> None:
         while True:
             engine.render(console=root_console, context=context)
 
-            #context.present(root_console) # Important if you want things to display at all!
-            events = tcod.event.wait()
-            engine.handle_events(events)
-            #root_console.clear()
+            engine.event_handler.handle_events()
 
             
 # ===========================

@@ -1,9 +1,11 @@
 import sys
-from typing import Iterable
-
-from entity import Entity
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
+
+from typing import Iterable, Optional, TYPE_CHECKING
+
+# from engine import Engine
+from entity import Entity
 
 import numpy as np  # type: ignore
 from tcod.console import Console
@@ -13,14 +15,26 @@ from globals import *
 
 
 class GameMap:
-    def __init__(self, width: int, height: int, entities: Iterable[Entity] = ()):
+    def __init__(self, engine, width: int, height: int, entities: Iterable[Entity] = () ):
+        self.engine = engine
         self.width, self.height = width, height
         self.entities = set(entities)
         self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
-        self.visible = np.full((width, height), fill_value=False, order="F")  # Tiles the player can now see
-        self.explored = np.full((width, height), fill_value=False, order="F")  # Tiles the player has seen before
+        self.visible = np.full( (width, height), fill_value=False, order="F" )  # Tiles the player can now see
+        self.explored = np.full( (width, height), fill_value=False, order="F" )  # Tiles the player has seen before
         
+    def get_blocking_entity_at_location(self, location_x: int, location_y: int) -> Optional[Entity]:
+        for entity in self.entities:
+            if (
+                entity.blocks_movement
+                and entity.x == location_x
+                and entity.y == location_y
+            ):
+                return entity
+
+        return None
+
     def in_bounds(self, x: int, y: int) -> bool:
         """Return True if x and y are inside of the bounds of this map."""
         return 0 <= x < self.width and 0 <= y < self.height
@@ -35,10 +49,10 @@ class GameMap:
 
         console.tiles_rgb[0:self.width, 0:self.height] = self.tiles["dark"]
         """
-        console.tiles_rgb[0:self.width, 0:self.height] = np.select(
+        console.tiles_rgb[0 : self.width, 0 : self.height] = np.select(
             condlist=[self.visible, self.explored],
             choicelist=[self.tiles["light"], self.tiles["dark"]],
-            default=tile_types.SHROUD
+            default=tile_types.SHROUD,
         )
 
         for entity in self.entities:

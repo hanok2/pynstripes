@@ -1,8 +1,30 @@
-from typing import Optional
+import sys
+sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
+sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
+from typing import Optional, TYPE_CHECKING
+
 import tcod.event
 from actions import Action, BumpAction, EscapeAction
 
+# from engine import Engine
+
+
 class EventHandler(tcod.event.EventDispatch[Action]):
+    def __init__(self, engine):
+        self.engine = engine
+
+    def handle_events(self) -> None:
+        for event in tcod.event.wait():
+            action = self.dispatch(event)
+
+            if action is None:
+                continue
+
+            action.perform()
+
+            self.engine.handle_enemy_turns()
+            self.engine.update_fov()  # Update the FOV before the players next action.
+
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit
 
@@ -11,17 +33,19 @@ class EventHandler(tcod.event.EventDispatch[Action]):
 
         key = event.sym
 
+        player = self.engine.player
+
         if key == tcod.event.K_UP:
-            action = BumpAction(dx=0, dy=-1)
+            action = BumpAction(player, dx=0, dy=-1)
         elif key == tcod.event.K_DOWN:
-            action = BumpAction(dx=0, dy=1)
+            action = BumpAction(player, dx=0, dy=1)
         elif key == tcod.event.K_LEFT:
-            action = BumpAction(dx=-1, dy=0)
+            action = BumpAction(player, dx=-1, dy=0)
         elif key == tcod.event.K_RIGHT:
-            action = BumpAction(dx=1, dy=0)
+            action = BumpAction(player, dx=1, dy=0)
 
         elif key == tcod.event.K_ESCAPE:
-            action = EscapeAction()
+            action = EscapeAction(player)
 
         # No valid key was pressed
         return action
