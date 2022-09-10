@@ -57,7 +57,7 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: in
 
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
             if random.random() < 0.8:
-                entity_factories.warrior.spawn(dungeon, x, y)
+                entity_factories.soldier.spawn(dungeon, x, y)
             else:
                 entity_factories.drone.spawn(dungeon, x, y)
 
