@@ -4,6 +4,7 @@ sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\
 import copy
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
 
+from render_order import RenderOrder
 from globals import globals
 
 from ai import BaseAI
@@ -12,7 +13,6 @@ if TYPE_CHECKING:
     from game_map import GameMap
 
 T = TypeVar("T", bound="Entity")
-
 
 
 class Entity:
@@ -31,6 +31,7 @@ class Entity:
         color: Tuple[int, int, int] = (255, 0, 0),
         name: str = "<Unnamed>",
         blocks_movement: bool = False,
+        render_order: RenderOrder = RenderOrder.CORPSE,
     ) -> None:
         self.x = x
         self.y = y
@@ -38,6 +39,7 @@ class Entity:
         self.color = color
         self.name = name
         self.blocks_movement = blocks_movement
+        self.render_order = render_order
         if gamemap:
             # If gamemap isn't provided now then we will set it later.
             self.gamemap = gamemap
@@ -89,6 +91,7 @@ class Actor(Entity):
             color=color,
             name=name,
             blocks_movement=True,
+            render_order=RenderOrder.ACTOR,
         )
 
         self.ai: Optional[BaseAI] = ai_cls(self)
