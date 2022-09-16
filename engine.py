@@ -37,12 +37,15 @@ class Engine:
         # If a tile is "visible" it should be added to "explored".
         self.game_map.explored |= self.game_map.visible
 
-    def render(self, console: Console, context: Context) -> None:
+    def render(self, console: Console, sdl_renderer, console_render) -> None:
         self.game_map.render(console)
 
         console.print(x=1, y=47, string=f"HP: {self.player.fighter.hp}/{self.player.fighter.max_hp}")
 
-        context.present(console)
+        sdl_renderer.copy(console_render.render(console))
+        
+        #context.present(console)
+        sdl_renderer.present()
 
         console.clear()
     
