@@ -20,11 +20,11 @@ def main() -> None:
     screen_width = globals.screen_width
     screen_height= globals.screen_height
 
-    map_width = screen_width-20
+    map_width = screen_width-0
     map_height= screen_height-5
 
     tileset = tcod.tileset.load_tilesheet(
-        "16x16_ascii-charset.png", 16, 16, tcod.tileset.CHARMAP_CP437
+        "16x16-RogueEdit.png", 16, 16, tcod.tileset.CHARMAP_CP437
     )
 
     player = copy.deepcopy(entity_factories.player)

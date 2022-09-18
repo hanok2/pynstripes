@@ -5,7 +5,9 @@ sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
 import numpy as np  # type: ignore
+import tcod
 from tcod.console import Console
+from PIL import Image
 
 from entity import Actor
 import tile_types
@@ -76,13 +78,28 @@ class GameMap:
             self.entities, key=lambda x: x.render_order.value
         )
 
+        img_temp = Image.open("./LOTR/tiles/tiles31.png")
+        img_temp= img_temp.convert("RGB")
+        # console.draw_semigraphics(pixels=img_temp, x=entity.x, y=entity.y)
+
         for entity in entities_sorted_for_rendering:
             # Only print entities that are in the FOV
             if self.visible[entity.x, entity.y]:
-                console.print(
-                    x=entity.x, y=entity.y, string=entity.char, fg=entity.color
-                )
+                # test out some features here...
 
+                # Used to be: console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
+
+                if entity.char == '@':
+                    console.put_char(x=entity.x, y=entity.y, ch=tcod.tileset.CHARMAP_CP437[18])
+                elif entity.char == 'S':
+                    console.put_char(x=entity.x, y=entity.y, ch=9829)
+                elif entity.char == 'D':
+                    console.put_char(x=entity.x, y=entity.y, ch=9830)
+                elif entity.char == 'W':
+                    console.put_char(x=entity.x, y=entity.y, ch=9827)
+                else:
+                    console.put_char(x=entity.x, y=entity.y, ch=tcod.tileset.CHARMAP_CP437[15])
+                
         ##
 
 
