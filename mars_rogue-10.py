@@ -52,7 +52,10 @@ def main() -> None:
 
     root_console = tcod.Console(screen_width, screen_height, order="F")
         
-    # sdl_window = tcod.sdl.video.new_window(window_width, window_height,flags=tcod.lib.SDL_WINDOW_RESIZABLE | tcod.lib.SDL_WINDOW_OPENGL, title="Red Planet Rogue")
+    # sdl_window = tcod.sdl.video.new_window(
+    #   window_width, 
+    #   window_height,flags=tcod.lib.SDL_WINDOW_RESIZABLE | tcod.lib.SDL_WINDOW_OPENGL, 
+    #   title="Red Planet Rogue")
 
     # sdl_renderer = tcod.sdl.render.new_renderer(sdl_window, target_textures=True)
         
