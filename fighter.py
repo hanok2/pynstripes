@@ -10,6 +10,7 @@ from render_order import RenderOrder
 if TYPE_CHECKING:
     from entity import Actor
 
+
 class Fighter(BaseComponent):
     entity: Actor
 
@@ -46,6 +47,5 @@ class Fighter(BaseComponent):
         self.entity.render_order = RenderOrder.CORPSE
 
         self.engine.message_log.add_message(death_message, death_message_color)
-
 
 ##

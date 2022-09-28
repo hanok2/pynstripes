@@ -1,29 +1,23 @@
 from __future__ import annotations
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
 from typing import List, Tuple, TYPE_CHECKING
 
 import numpy as np  # type: ignore
 import tcod
 
 from actions import Action, MeleeAction, MovementAction, WaitAction
-from base_component import BaseComponent
 
 if TYPE_CHECKING:
     from entity import Actor
 
 
-class BaseAI(Action, BaseComponent):
-    entity: Actor
-
+class BaseAI(Action):
     def perform(self) -> None:
         raise NotImplementedError()
 
     def get_path_to(self, dest_x: int, dest_y: int) -> List[Tuple[int, int]]:
         """Compute and return a path to the target position.
 
-        If there is no valid path, then it returns an empty list.
+        If no valid path, then it returns an empty list.
         """
         # Copy the walkable array.
         cost = np.array(self.entity.gamemap.tiles["walkable"], dtype=np.int8)

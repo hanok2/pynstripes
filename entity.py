@@ -1,6 +1,3 @@
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
 import copy
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
 
@@ -9,8 +6,6 @@ from globals import globals
 
 from ai import BaseAI
 from fighter import Fighter
-if TYPE_CHECKING:
-    from game_map import GameMap
 
 T = TypeVar("T", bound="Entity")
 
@@ -24,7 +19,7 @@ class Entity:
 
     def __init__(
         self, 
-        gamemap = None,
+        gamemap=None,
         x: int = 0, 
         y: int = 0, 
         char: str = "?", 

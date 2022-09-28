@@ -1,30 +1,34 @@
 #!/usr/bin/env python3
+'''
+
 import sys
-from turtle import title, window_height, window_width
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
 sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
+'''
 import copy
 
 import tcod
-## pip install -r requirements.txt
+# pip install -r requirements.txt
 
+import color
 from engine import Engine
-from globals import globals # including globals object
+from globals import globals  # including globals object
 import entity_factories
 from input_handler import EventHandler
 from procgen import generate_dungeon
+
 
 # -------------------
 
 def main() -> None:
     screen_width = globals.screen_width
-    screen_height= globals.screen_height
+    screen_height = globals.screen_height
 
-    map_width = screen_width-20
-    map_height= screen_height-5
+    map_width = screen_width - 0
+    map_height = screen_height - 7
 
     tileset = tcod.tileset.load_tilesheet(
-        "16x16_ascii-charset.png", 16, 16, tcod.tileset.CHARMAP_CP437
+        "16x16-RogueEdit.png", 16, 16, tcod.tileset.CHARMAP_CP437
     )
 
     player = copy.deepcopy(entity_factories.player)
@@ -43,29 +47,46 @@ def main() -> None:
     )
     engine.update_fov()
 
-    window_height=screen_height*tileset.tile_height
-    window_width=screen_width*tileset.tile_width
-
-    root_console = tcod.Console(screen_width, screen_height, order="F")
-    sdl_window = tcod.sdl.video.new_window(
-        window_width, window_height,
-        flags=tcod.lib.SDL_WINDOW_RESIZABLE,
-        title="Red Planet Rogue"
+    engine.message_log.add_message(
+        "Hello and welcome, adventurer, to yet another dungeon!", color.welcome_text
     )
 
-    sdl_renderer = tcod.sdl.render.new_renderer(sdl_window, target_textures=True)
-    atlas = tcod.render.SDLTilesetAtlas(sdl_renderer, tileset)
-    console_render = tcod.render.SDLConsoleRender(atlas)
+    window_height = screen_height * tileset.tile_height
+    window_width = screen_width * tileset.tile_width
 
-    while True:
-        engine.render(console=root_console, sdl_renderer=sdl_renderer, console_render=console_render)
+    root_console = tcod.Console(screen_width, screen_height, order="F")
 
-        engine.event_handler.handle_events()
+    # sdl_window = tcod.sdl.video.new_window(
+    #   window_width, 
+    #   window_height,flags=tcod.lib.SDL_WINDOW_RESIZABLE | tcod.lib.SDL_WINDOW_OPENGL, 
+    #   title="Red Planet Rogue")
 
-            
+    # sdl_renderer = tcod.sdl.render.new_renderer(sdl_window, target_textures=True)
+
+    # atlas = tcod.render.SDLTilesetAtlas(sdl_renderer, tileset)
+    # console_render = tcod.render.SDLConsoleRender(atlas)
+
+    with tcod.context.new(
+            width=window_width, height=window_height, tileset=tileset, title="Red Planet Rogue", vsync=True,
+            renderer=tcod.context.RENDERER_SDL2
+    ) as context:
+        while True:
+            root_console.clear()
+            # engine.event_handler.on_render(console=root_console,
+            #         sdl_renderer=sdl_renderer, console_render=console_render)
+            engine.event_handler.on_render(console=root_console)
+            context.present(root_console)
+
+            # engine.render(console=root_console, sdl_renderer=sdl_renderer, console_render=console_render)
+
+            engine.event_handler.handle_events(context)
+
+    ##
+
+
 # ===========================
 
 if __name__ == "__main__":
     main()
 
-## 
+##

@@ -1,11 +1,6 @@
 from typing import List, Reversible, Tuple
 import textwrap
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
-
 import tcod
-
 import color
 
 
@@ -71,6 +66,3 @@ class MessageLog:
                 if y_offset < 0:
                     return  # No more space to print messages.
 
-
-
-##

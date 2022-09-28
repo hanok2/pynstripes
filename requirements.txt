@@ -1,2 +1,9 @@
-tcod>=13.7
-numpy>=1.21.4
+tcod
+numpy
+pillow
+
+pyglet
+requests
+setuptools
+wheel
+cffi

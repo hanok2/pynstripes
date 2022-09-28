@@ -1,21 +1,9 @@
 from __future__ import annotations
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
-from typing import TYPE_CHECKING
-
-from tcod.context import Context
 from tcod.console import Console
-
-from globals import globals
 from tcod.map import compute_fov
-
-from entity import Actor
-
 from input_handler import MainGameEventHandler
 from message_log import MessageLog
-from render_functions import render_bar
-
+from render_functions import render_bar, render_names_at_mouse_location
 
 
 class Engine:
@@ -62,6 +50,8 @@ class Engine:
         # sdl_renderer.present()
 
         # console.clear()
+
+        render_names_at_mouse_location(console=console, x=21, y=44, engine=self)
     
     
 

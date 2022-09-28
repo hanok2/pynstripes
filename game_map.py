@@ -1,7 +1,3 @@
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
-
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
 import numpy as np  # type: ignore
@@ -18,15 +14,15 @@ from globals import *
 
 
 class GameMap:
-    def __init__(self, engine, width: int, height: int, entities: Iterable[Entity] = () ):
+    def __init__(self, engine, width: int, height: int, entities: Iterable[Entity] = ()):
         self.engine = engine
         self.width, self.height = width, height
         self.entities = set(entities)
         self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
-        self.visible = np.full( (width, height), fill_value=False, order="F" )  # Tiles the player can now see
-        self.explored = np.full( (width, height), fill_value=False, order="F" )  # Tiles the player has seen before
-        
+        self.visible = np.full((width, height), fill_value=False, order="F")  # Tiles the player can now see
+        self.explored = np.full((width, height), fill_value=False, order="F")  # Tiles the player has seen before
+
     @property
     def actors(self) -> Iterator[Actor]:
         """Iterate over this maps living actors."""
@@ -39,9 +35,9 @@ class GameMap:
     def get_blocking_entity_at_location(self, location_x: int, location_y: int) -> Optional[Entity]:
         for entity in self.entities:
             if (
-                entity.blocks_movement
-                and entity.x == location_x
-                and entity.y == location_y
+                    entity.blocks_movement
+                    and entity.x == location_x
+                    and entity.y == location_y
             ):
                 return entity
 
@@ -68,7 +64,7 @@ class GameMap:
 
         console.tiles_rgb[0:self.width, 0:self.height] = self.tiles["dark"]
         """
-        console.tiles_rgb[0 : self.width, 0 : self.height] = np.select(
+        console.tiles_rgb[0: self.width, 0: self.height] = np.select(
             condlist=[self.visible, self.explored],
             choicelist=[self.tiles["light"], self.tiles["dark"]],
             default=tile_types.SHROUD,
@@ -78,8 +74,8 @@ class GameMap:
             self.entities, key=lambda x: x.render_order.value
         )
 
-        img_temp = Image.open("./LOTR/tiles/tiles31.png")
-        img_temp= img_temp.convert("RGB")
+        img_temp = Image.open("1bit_imitate/LOTR/tiles/tiles31.png")
+        img_temp = img_temp.convert("RGB")
         # console.draw_semigraphics(pixels=img_temp, x=entity.x, y=entity.y)
 
         for entity in entities_sorted_for_rendering:
@@ -99,8 +95,7 @@ class GameMap:
                     console.put_char(x=entity.x, y=entity.y, ch=9827)
                 else:
                     console.put_char(x=entity.x, y=entity.y, ch=tcod.tileset.CHARMAP_CP437[15])
-                
-        ##
 
+        ##
 
 ##

@@ -1,7 +1,3 @@
-import sys
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib')
-sys.path.append('C:\\Users\\aavon\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages')
-
 from ai import HostileEnemy
 from fighter import Fighter
 from entity import Actor
